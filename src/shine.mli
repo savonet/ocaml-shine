@@ -30,6 +30,9 @@ type parameters =
   }
 
 exception Samples_per_frame
+exception Invalid_bitrate
+exception Invalid_samplerate
+exception Invalid_channels
 
 val samples_per_frame : int
 

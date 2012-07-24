@@ -30,14 +30,27 @@ type parameters =
   }
 
 exception Samples_per_frame
+exception Invalid_bitrate
+exception Invalid_samplerate
+exception Invalid_channels
 
 external samples_per_frame : unit -> int = "ocaml_shine_samples_per_frames"
 
 let samples_per_frame = samples_per_frame()
 
+external samplerate_index : int -> int = "ocaml_shine_samplerate_index"
+
+external bitrate_index : int -> int = "ocaml_shine_bitrate_index"
+
 external create : int -> int -> int -> t = "ocaml_shine_init"
 
 let create params = 
+  if samplerate_index params.samplerate < 0 then
+    raise Invalid_samplerate;
+  if bitrate_index params.bitrate < 0 then
+    raise Invalid_bitrate;
+  if params.channels < 1 || params.channels > 2 then
+    raise Invalid_channels;
   create params.channels params.samplerate params.bitrate
 
 external encode_buffer : t -> float array array -> int -> string = "ocaml_shine_encode_float"

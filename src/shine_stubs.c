@@ -59,6 +59,18 @@ CAMLprim value ocaml_shine_samples_per_frames(value unit)
   CAMLreturn(Val_int(samp_per_frame));
 }
 
+CAMLprim value ocaml_shine_bitrate_index(value br)
+{
+  CAMLparam0();
+  CAMLreturn(Val_int(L3_find_bitrate_index(Int_val(br))));
+}
+
+CAMLprim value ocaml_shine_samplerate_index(value sr)
+{
+  CAMLparam0();
+  CAMLreturn(Val_int(L3_find_samplerate_index(Int_val(sr))));
+}
+
 CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
 {
   CAMLparam0();
