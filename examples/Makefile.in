@@ -1,0 +1,10 @@
+SOURCES=encode.ml
+RESULT=encode
+INCDIRS=../src 
+LIBS=unix shine
+OCAMLC = @OCAMLC@
+OCAMLOPT = @OCAMLOPT@
+
+all: nc
+
+include OCamlMakefile
