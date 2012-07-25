@@ -83,6 +83,10 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   config.wave.channels   = Int_val(chans);
   config.wave.samplerate = Int_val(samplerate); 
   config.mpeg.bitr       = Int_val(bitrate);
+  if (config.wave.channels == 1)
+    config.mpeg.mode = 3;
+  else
+    config.mpeg.mode == 1;
 
   enc = L3_initialise(&config);
 
