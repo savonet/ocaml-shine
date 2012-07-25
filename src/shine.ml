@@ -53,13 +53,13 @@ let create params =
     raise Invalid_channels;
   create params.channels params.samplerate params.bitrate
 
-external encode_buffer : t -> float array array -> int -> string = "ocaml_shine_encode_float"
+external encode_buffer : t -> float array array -> string = "ocaml_shine_encode_float"
 
-let encode_buffer enc buf ofs = 
-  if (Array.length buf == 0) || (Array.length buf - ofs != samples_per_frame) then
+let encode_buffer enc buf = 
+  if (Array.length buf == 0) || (Array.length buf.(0) != samples_per_frame) then
     raise Samples_per_frame;
 
-  encode_buffer enc buf ofs
+  encode_buffer enc buf
 
 external encode_s16le : t -> string -> int -> string = "ocaml_shine_encode_s16le"
 

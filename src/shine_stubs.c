@@ -108,7 +108,7 @@ static inline int16_t clip(double s)
 
 static inline int16_t bswap_16 (int16_t x) { return ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)); }
 
-CAMLprim value ocaml_shine_encode_float(value e, value data, value ofs)
+CAMLprim value ocaml_shine_encode_float(value e, value data)
 {
   CAMLparam2(e,data);
   CAMLlocal2(src,ret);
@@ -124,7 +124,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data, value ofs)
     src = Field(data, c);
     for (i = 0; i < samp_per_frame; i++)
     {
-      pcm[c][i] = clip(Double_field(src, i + ofs));
+      pcm[c][i] = clip(Double_field(src, i));
 #ifdef BIGENDIAN
       pcm[c][i] = bswap_16(pcm[c][i]);
 #endif
