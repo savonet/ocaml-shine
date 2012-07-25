@@ -36,7 +36,7 @@
 
 #include "config.h"
 
-#define Encoder_val(v) (*((shine_t**)Data_custom_val(v)))
+#define Encoder_val(v) (*((shine_t*)Data_custom_val(v)))
 
 static void finalize_encoder(value e)
 {
@@ -76,7 +76,7 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   CAMLparam0();
   CAMLlocal1(ans);
   shine_config_t config;
-  shine_t *enc;
+  shine_t enc;
 
   L3_set_config_mpeg_defaults(&config.mpeg);
   
@@ -86,11 +86,13 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   if (config.wave.channels == 1)
     config.mpeg.mode = 3;
   else
-    config.mpeg.mode == 1;
+    config.mpeg.mode = 1;
 
   enc = L3_initialise(&config);
+  if (enc == NULL)
+    caml_raise_out_of_memory();
 
-  ans = caml_alloc_custom(&encoder_ops, sizeof(shine_t *), 1, 0);
+  ans = caml_alloc_custom(&encoder_ops, sizeof(shine_t), 1, 0);
   Encoder_val(ans) = enc;   
 
   CAMLreturn(ans);
@@ -121,7 +123,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
   long written;
   unsigned char *outdata;
 
-  shine_t *enc = Encoder_val(e);
+  shine_t enc = Encoder_val(e);
 
   for (c = 0; c < Wosize_val(data); c++)
   {
@@ -159,7 +161,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
   
   unsigned char *outdata;
 
-  shine_t *enc = Encoder_val(e);
+  shine_t enc = Encoder_val(e);
 
   for (c = 0; c < chans; c++)
   {
