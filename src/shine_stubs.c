@@ -131,9 +131,6 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
     for (i = 0; i < samp_per_frame; i++)
     {
       pcm[c][i] = clip(Double_field(src, i));
-#ifdef BIGENDIAN
-      pcm[c][i] = bswap_16(pcm[c][i]);
-#endif
     }
   }
 
