@@ -85,6 +85,7 @@ let _ =
           output_string oc (Shine.encode_s16le enc buf channels);
         done;
         with End_of_file -> () end;
+        output_string oc (Shine.flush enc);
         close_in ic;
         Printf.printf "Finished in %.0f seconds.\n" ((Unix.time ())-.start);
         Gc.full_major ()

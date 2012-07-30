@@ -41,3 +41,5 @@ val create : parameters -> t
 val encode_buffer : t -> float array array -> string
 
 val encode_s16le : t -> string -> int -> string
+
+val flush : t -> string

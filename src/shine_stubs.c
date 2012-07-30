@@ -169,16 +169,33 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
       pcm[c][i] = bswap_16(pcm[c][i]);
 #endif
     }
-   }
+  }
 
-   caml_enter_blocking_section();
+  caml_enter_blocking_section();
 
-   outdata = L3_encode_frame(enc, pcm, &written);
+  outdata = L3_encode_frame(enc, pcm, &written);
 
-   caml_leave_blocking_section();
+  caml_leave_blocking_section();
 
-   ret = caml_alloc_string(written);
-   memcpy(String_val(ret),outdata,written);
+  ret = caml_alloc_string(written);
+  memcpy(String_val(ret),outdata,written);
+
+  CAMLreturn(ret);
+}
+
+CAMLprim value ocaml_shine_flush(value e)
+{
+  CAMLparam1(e);
+  CAMLlocal1(ret);
+
+  long written;
+  unsigned char *outdata;
+  shine_t enc = Encoder_val(e);
+
+  outdata = L3_flush(enc,&written);
+
+  ret = caml_alloc_string(written);
+  memcpy(String_val(ret),outdata,written);
 
   CAMLreturn(ret);
 }

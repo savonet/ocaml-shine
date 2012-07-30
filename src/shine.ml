@@ -68,3 +68,5 @@ let encode_s16le enc data chans =
     raise Samples_per_frame;
 
   encode_s16le enc data chans
+
+external flush : t -> string = "ocaml_shine_flush"
