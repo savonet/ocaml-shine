@@ -40,7 +40,7 @@
 
 static void finalize_encoder(value e)
 {
-  L3_close(Encoder_val(e));
+  shine_close(Encoder_val(e));
 }
 
 static struct custom_operations encoder_ops =
@@ -62,13 +62,13 @@ CAMLprim value ocaml_shine_samples_per_frames(value unit)
 CAMLprim value ocaml_shine_bitrate_index(value br)
 {
   CAMLparam0();
-  CAMLreturn(Val_int(L3_find_bitrate_index(Int_val(br))));
+  CAMLreturn(Val_int(shine_find_bitrate_index(Int_val(br))));
 }
 
 CAMLprim value ocaml_shine_samplerate_index(value sr)
 {
   CAMLparam0();
-  CAMLreturn(Val_int(L3_find_samplerate_index(Int_val(sr))));
+  CAMLreturn(Val_int(shine_find_samplerate_index(Int_val(sr))));
 }
 
 CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
@@ -78,7 +78,7 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   shine_config_t config;
   shine_t enc;
 
-  L3_set_config_mpeg_defaults(&config.mpeg);
+  shine_set_config_mpeg_defaults(&config.mpeg);
   
   config.wave.channels   = Int_val(chans);
   config.wave.samplerate = Int_val(samplerate); 
@@ -88,7 +88,7 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   else
     config.mpeg.mode = 1;
 
-  enc = L3_initialise(&config);
+  enc = shine_initialise(&config);
   if (enc == NULL)
     caml_raise_out_of_memory();
 
@@ -136,7 +136,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
 
   caml_enter_blocking_section();
 
-  outdata = L3_encode_frame(enc, pcm, &written);
+  outdata = shine_encode_frame(enc, pcm, &written);
 
   caml_leave_blocking_section();
 
@@ -173,7 +173,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
 
   caml_enter_blocking_section();
 
-  outdata = L3_encode_frame(enc, pcm, &written);
+  outdata = shine_encode_frame(enc, pcm, &written);
 
   caml_leave_blocking_section();
 
@@ -192,7 +192,7 @@ CAMLprim value ocaml_shine_flush(value e)
   unsigned char *outdata;
   shine_t enc = Encoder_val(e);
 
-  outdata = L3_flush(enc,&written);
+  outdata = shine_flush(enc,&written);
 
   ret = caml_alloc_string(written);
   memcpy(String_val(ret),outdata,written);

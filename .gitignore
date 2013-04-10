@@ -5,6 +5,7 @@ config.guess
 config.log
 config.status
 config.sub
+config.h
 configure
 install-sh
 src/META

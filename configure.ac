@@ -1,6 +1,6 @@
 
 # check for one particular file of the sources 
-AC_INIT([ocaml-shine],[0.1.0],[savonet-users@lists.sourceforge.net])
+AC_INIT([ocaml-shine],[0.2.0],[savonet-users@lists.sourceforge.net])
 
 VERSION=$PACKAGE_VERSION
 AC_MSG_RESULT([configuring $PACKAGE_STRING])
@@ -13,7 +13,7 @@ AC_C_BIGENDIAN(AC_DEFINE([BIGENDIAN], [1], [The target is big endian]),[])
 AC_BASE_CHECKS()
 
 PKG_PROG_PKG_CONFIG()
-PKG_CONFIG_CHECK_MODULE([shine],[0.1.0])
+PKG_CONFIG_CHECK_MODULE([shine],[2.0.0])
 
 # substitutions to perform
 AC_SUBST(VERSION)
