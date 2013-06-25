@@ -78,7 +78,7 @@ let _ =
       if input_string ic 4 <> "data" then invalid_arg "No data tag";
       (* This ensures the actual audio data will start on a new page, as per
        * spec. *)
-      let buflen = 2*channels*Shine.samples_per_frame in
+      let buflen = 2*channels*(Shine.samples_per_pass enc)in
       let buf = String.create buflen in
         begin try while true do
           really_input ic buf 0 (String.length buf);
