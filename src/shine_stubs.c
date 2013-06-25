@@ -53,22 +53,20 @@ static struct custom_operations encoder_ops =
   custom_deserialize_default
 };
 
-CAMLprim value ocaml_shine_samples_per_frames(value unit)
+CAMLprim value ocaml_shine_samples_per_pass(value e)
 {
-  CAMLparam0();
-  CAMLreturn(Val_int(samp_per_frame));
+  CAMLparam1(e);
+  CAMLreturn(Val_int(shine_samples_per_pass(Encoder_val(e))));
 }
 
-CAMLprim value ocaml_shine_bitrate_index(value br)
+CAMLprim value ocaml_shine_check_config(value samplerate, value bitrate)
 {
   CAMLparam0();
-  CAMLreturn(Val_int(shine_find_bitrate_index(Int_val(br))));
-}
 
-CAMLprim value ocaml_shine_samplerate_index(value sr)
-{
-  CAMLparam0();
-  CAMLreturn(Val_int(shine_find_samplerate_index(Int_val(sr))));
+  if (shine_check_config(Int_val(samplerate), Int_val(bitrate)) < 0)
+    CAMLreturn(Val_false);
+  
+  CAMLreturn(Val_true);
 }
 
 CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
@@ -84,9 +82,9 @@ CAMLprim value ocaml_shine_init(value chans, value samplerate, value bitrate)
   config.wave.samplerate = Int_val(samplerate); 
   config.mpeg.bitr       = Int_val(bitrate);
   if (config.wave.channels == 1)
-    config.mpeg.mode = 3;
+    config.mpeg.mode = MONO;
   else
-    config.mpeg.mode = 1;
+    config.mpeg.mode = JOINT_STEREO;
 
   enc = shine_initialise(&config);
   if (enc == NULL)
@@ -118,17 +116,19 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
 {
   CAMLparam2(e,data);
   CAMLlocal2(src,ret);
-  int16_t pcm[2][samp_per_frame];
+  int16_t *pcm[2];
+  int16_t chan1[SHINE_MAX_SAMPLES], chan2[SHINE_MAX_SAMPLES];
   int c,i;
   long written;
   unsigned char *outdata;
 
   shine_t enc = Encoder_val(e);
+  pcm[0] = chan1, pcm[1] = chan2;
 
   for (c = 0; c < Wosize_val(data); c++)
   {
     src = Field(data, c);
-    for (i = 0; i < samp_per_frame; i++)
+    for (i = 0; i < shine_samples_per_pass(enc); i++)
     {
       pcm[c][i] = clip(Double_field(src, i));
     }
@@ -150,7 +150,8 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
 {
   CAMLparam2(e,data);
   CAMLlocal1(ret);
-  int16_t pcm[2][samp_per_frame];
+  int16_t *pcm[2];
+  int16_t chan1[SHINE_MAX_SAMPLES], chan2[SHINE_MAX_SAMPLES];
   int16_t *src = (int16_t *)String_val(data);
   int c,i;
   long written;
@@ -159,10 +160,11 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
   unsigned char *outdata;
 
   shine_t enc = Encoder_val(e);
+  pcm[0] = chan1; pcm[1] = chan2;
 
   for (c = 0; c < chans; c++)
   {
-    for (i = 0; i < samp_per_frame; i++)
+    for (i = 0; i < shine_samples_per_pass(enc); i++)
     {
       pcm[c][i] = src[i*chans + c];
 #ifdef BIGENDIAN

@@ -29,14 +29,17 @@ type parameters =
     bitrate    : int;
   }
 
-exception Samples_per_frame
-exception Invalid_bitrate
-exception Invalid_samplerate
+exception Invalid_buffer_size
+
+(** Raised when samplerate and/or bitrate
+  * is invalid. *) 
+exception Invalid_configuration
+
 exception Invalid_channels
 
-val samples_per_frame : int
-
 val create : parameters -> t
+
+val samples_per_pass : t -> int
 
 val encode_buffer : t -> float array array -> string
 
