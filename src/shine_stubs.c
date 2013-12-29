@@ -136,7 +136,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
 
   caml_enter_blocking_section();
 
-  outdata = shine_encode_frame(enc, pcm, &written);
+  outdata = shine_encode_buffer(enc, pcm, &written);
 
   caml_leave_blocking_section();
 
@@ -175,7 +175,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
 
   caml_enter_blocking_section();
 
-  outdata = shine_encode_frame(enc, pcm, &written);
+  outdata = shine_encode_buffer(enc, pcm, &written);
 
   caml_leave_blocking_section();
 
