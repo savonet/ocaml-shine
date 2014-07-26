@@ -110,8 +110,6 @@ static inline int16_t clip(double s)
     return (s * INT16_MAX);
 }
 
-static inline int16_t bswap_16 (int16_t x) { return ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)); }
-
 CAMLprim value ocaml_shine_encode_float(value e, value data)
 {
   CAMLparam2(e,data);
@@ -119,7 +117,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
   int16_t *pcm[2];
   int16_t chan1[SHINE_MAX_SAMPLES], chan2[SHINE_MAX_SAMPLES];
   int c,i;
-  long written;
+  int written;
   unsigned char *outdata;
 
   shine_t enc = Encoder_val(e);
@@ -146,36 +144,39 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
   CAMLreturn(ret);
 }
 
+#ifdef BIGENDIAN
+static inline int16_t bswap_16 (int16_t x) { return ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)); }
+
+void swap_buffer(int16_t *sample_buffer, int length)
+{
+  int i;
+  for (i=0; i<length; i++)
+    sample_buffer[i] = bswap_16(sample_buffer[i]);
+}
+#endif
+
 CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
 {
   CAMLparam2(e,data);
   CAMLlocal1(ret);
-  int16_t *pcm[2];
-  int16_t chan1[SHINE_MAX_SAMPLES], chan2[SHINE_MAX_SAMPLES];
+  int16_t pcm[2*SHINE_MAX_SAMPLES];
   int16_t *src = (int16_t *)String_val(data);
-  int c,i;
-  long written;
+  int written;
   int chans = Int_val(channels);
   
   unsigned char *outdata;
 
   shine_t enc = Encoder_val(e);
-  pcm[0] = chan1; pcm[1] = chan2;
 
-  for (c = 0; c < chans; c++)
-  {
-    for (i = 0; i < shine_samples_per_pass(enc); i++)
-    {
-      pcm[c][i] = src[i*chans + c];
-#ifdef BIGENDIAN
-      pcm[c][i] = bswap_16(pcm[c][i]);
-#endif
-    }
-  }
+  memcpy(pcm, src, chans*shine_samples_per_pass(enc)*sizeof(int16_t));
 
   caml_enter_blocking_section();
 
-  outdata = shine_encode_buffer(enc, pcm, &written);
+#ifdef BIGENDIAN
+  swap_buffer(pcm, chans*shine_samples_per_pass(enc));
+#endif
+
+  outdata = shine_encode_buffer_interleaved(enc, pcm, &written);
 
   caml_leave_blocking_section();
 
@@ -190,7 +191,7 @@ CAMLprim value ocaml_shine_flush(value e)
   CAMLparam1(e);
   CAMLlocal1(ret);
 
-  long written;
+  int written;
   unsigned char *outdata;
   shine_t enc = Encoder_val(e);
 
