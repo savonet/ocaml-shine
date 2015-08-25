@@ -1,0 +1,12 @@
+language: c
+addons:
+  apt:
+    packages:
+    - ocaml-nox
+    - ocaml-findlib
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libshine-dev
+
+script: ./bootstrap && ./configure && make
