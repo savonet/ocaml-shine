@@ -1,29 +1,33 @@
-opam-version: "1.2"
+opam-version: "2.0"
 version: "dev"
 maintainer: "The Savonet Team <savonet-users@lists.sourceforge.net>"
 authors: "The Savonet Team <savonet-users@lists.sourceforge.net>"
+license: "GPL-2.0"
 homepage: "https://github.com/savonet/ocaml-shine"
 bug-reports: "https://github.com/savonet/ocaml-shine/issues"
-license: "GPL-2.0"
-dev-repo: "https://github.com/savonet/ocaml-shine.git"
+depends: [
+  "ocaml"
+  "ocamlfind" {build}
+]
+flags: light-uninstall
 build: [
   ["./bootstrap"]
-  ["./configure" "--prefix=%{prefix}%"] { os != "darwin" }
-  ["./configure" "OCAMLFLAGS=-cclib -L/usr/local/lib" "--prefix=%{prefix}%"] { os = "darwin" }
+  ["./configure" "--prefix=%{prefix}%"] {os != "macos"}
+  ["./configure" "OCAMLFLAGS=-cclib -L/usr/local/lib" "--prefix=%{prefix}%"]
+    {os = "macos"}
   [make "clean"]
   [make]
 ]
 install: [make "install"]
 remove: ["ocamlfind" "remove" "shine"]
-depends: [
-  "ocamlfind" {build}
-]
 depexts: [
-  [["alpine"] ["shine"]]
-  [["centos"] ["libshine-devel"]]
-  [["fedora"] ["libshine-devel"]]
-  [["opensuse"] ["libshine-devel"]]
-  [["debian"] ["libshine-dev"]]
-  [["ubuntu"] ["libshine-dev"]]
-  [["osx" "homebrew"] ["drfill/liquidsoap/libshine"]]
+  ["shine"] {os-distribution = "alpine"}
+  ["libshine-devel"] {os-distribution = "centos"}
+  ["libshine-devel"] {os-distribution = "fedora"}
+  ["libshine-devel"] {os-distribution = "opensuse"}
+  ["libshine-dev"] {os-distribution = "debian"}
+  ["libshine-dev"] {os-distribution = "ubuntu"}
+  ["drfill/liquidsoap/libshine"]
+    {os = "macos" & os-distribution = "homebrew"}
 ]
+dev-repo: "git+https://github.com/savonet/ocaml-shine.git"
