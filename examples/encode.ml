@@ -1,15 +1,13 @@
-open Unix
-
 let src = ref ""
 let dst = ref ""
 
 let buflen = ref 1024
 
 let input_string chan len =
-  let ans = String.create len in
+  let ans = Bytes.create len in
     (* TODO: check length *)
     ignore (input chan ans 0 len) ;
-    ans
+    Bytes.to_string ans
 
 let input_int chan =
   let buf = input_string chan 4 in
@@ -79,10 +77,10 @@ let _ =
       (* This ensures the actual audio data will start on a new page, as per
        * spec. *)
       let buflen = 2*channels*(Shine.samples_per_pass enc)in
-      let buf = String.create buflen in
+      let buf = Bytes.create buflen in
         begin try while true do
-          really_input ic buf 0 (String.length buf);
-          output_string oc (Shine.encode_s16le enc buf channels);
+          really_input ic buf 0 (Bytes.length buf);
+          output_string oc (Shine.encode_s16le enc (Bytes.to_string buf) channels);
         done;
         with End_of_file -> () end;
         output_string oc (Shine.flush enc);

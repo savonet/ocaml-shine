@@ -34,7 +34,14 @@
 
 #include <string.h>
 
-#include "config.h"
+#ifdef _WIN32
+  #include <winsock.h>
+#else
+  #include <arpa/inet.h>
+#endif
+
+static int swapped = ntohs(1);
+#define IS_BIGENDIAN (swapped == 1)
 
 #define Encoder_val(v) (*((shine_t*)Data_custom_val(v)))
 

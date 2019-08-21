@@ -1,6 +1,0 @@
-name="shine"
-version="@VERSION@"
-description="OCaml bindings for shine"
-requires="@requires@"
-archive(byte)="shine.cma"
-archive(native)="shine.cmxa"

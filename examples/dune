@@ -1,0 +1,8 @@
+(executable
+ (name encode)
+ (libraries shine unix))
+
+(alias
+ (name examples)
+ (deps
+  (:< encode.exe)))
