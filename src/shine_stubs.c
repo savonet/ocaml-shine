@@ -34,12 +34,6 @@
 
 #include <string.h>
 
-#ifdef _WIN32
-  #include <winsock.h>
-#else
-  #include <arpa/inet.h>
-#endif
-
 #define IS_BIGENDIAN (!*(unsigned char *)&(uint16_t){1})
 
 #define Encoder_val(v) (*((shine_t*)Data_custom_val(v)))
