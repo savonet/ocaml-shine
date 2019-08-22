@@ -40,8 +40,7 @@
   #include <arpa/inet.h>
 #endif
 
-static int swapped = ntohs(1);
-#define IS_BIGENDIAN (swapped == 1)
+#define IS_BIGENDIAN (!*(unsigned char *)&(uint16_t){1})
 
 #define Encoder_val(v) (*((shine_t*)Data_custom_val(v)))
 
@@ -151,7 +150,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
   CAMLreturn(ret);
 }
 
-#ifdef BIGENDIAN
+#ifdef IS_BIGENDIAN
 static inline int16_t bswap_16 (int16_t x) { return ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8)); }
 
 void swap_buffer(int16_t *sample_buffer, int length)
@@ -179,7 +178,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
 
   caml_enter_blocking_section();
 
-#ifdef BIGENDIAN
+#ifdef IS_BIGENDIAN
   swap_buffer(pcm, chans*shine_samples_per_pass(enc));
 #endif
 
