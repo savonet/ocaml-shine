@@ -6,7 +6,7 @@ authors: "The Savonet Team <savonet-users@lists.sourceforge.net>"
 license: "GPL-2.0"
 homepage: "https://github.com/savonet/ocaml-shine"
 bug-reports: "https://github.com/savonet/ocaml-shine/issues"
-synopsis: "Fixed-point MP3 encoder."
+synopsis: "Fixed-point MP3 encoder"
 description:
   "shine is a super fast mp3 encoding library implemented in fixed-point arithmetic."
 depends: [
