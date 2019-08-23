@@ -11,12 +11,13 @@ description:
   "shine is a super fast mp3 encoding library implemented in fixed-point arithmetic."
 depends: [
   "ocaml"
-  "dune"
+  "dune" {>="1.3"}
 ]
 build: [
-  [make]
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
-install: [make "install"]
 depexts: [
   ["shine"] {os-distribution = "alpine"}
   ["libshine-devel"] {os-distribution = "centos"}
