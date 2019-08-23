@@ -1,5 +1,5 @@
 build:
-	@dune build encode.exe
+	@dune build @examples
 
 clean:
 	@dune clean
