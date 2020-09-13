@@ -4,31 +4,40 @@ ocaml-shine
 This package contains an OCaml interface for the shine fixed-point encoding
 library. Please read the COPYING file before using this software.
 
-Prerequisites
--------------
+Prerequisites:
+==============
 
-- ocaml >= 3.10.2 (haven't tried earlier versions)
-- libshine >= 0.1.0
-- findlib >= 0.8.1 (haven't tried earlier versions)
+- ocaml
 
-Compilation
------------
+- lame
 
-```sh
-make all
+- findlib
+
+- dune
+
+Compilation:
+============
+
+```
+$ dune build
 ```
 
-This should build both the native and the byte-code version of the extension
-library.
+This should build both the native and the byte-code version of the
+extension library.
 
-Installation
-------------
+Installation:
+=============
 
-```sh
-make install
+Via `opam`:
+
+```
+$ opam install shine
 ```
 
-This should install the library file (using ocamlfind) in the appropriate place.
+Via `dune` (for developers):
+```
+$ dune install
+```
 
 Author
 ------
