@@ -14,5 +14,6 @@
  (description "shine is a super fast mp3 encoding library implemented in fixed-point arithmetic.")
  (depends
   (ocaml (>= 4.03.0))
-  (dune (> 2.0)))
+  (dune (> 2.0))
+  dune-configurator)
 )

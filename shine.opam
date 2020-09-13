@@ -12,6 +12,7 @@ bug-reports: "https://github.com/savonet/ocaml-shine/issues"
 depends: [
   "ocaml" {>= "4.03.0"}
   "dune" {> "2.0"}
+  "dune-configurator"
 ]
 build: [
   ["dune" "subst"] {pinned}
