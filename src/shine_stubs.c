@@ -36,6 +36,10 @@
 
 #define IS_BIGENDIAN (!*(unsigned char *)&(uint16_t){1})
 
+#ifndef Bytes_val
+#define Bytes_val String_val
+#endif
+
 #define Encoder_val(v) (*((shine_t*)Data_custom_val(v)))
 
 static void finalize_encoder(value e)
@@ -139,7 +143,7 @@ CAMLprim value ocaml_shine_encode_float(value e, value data)
   caml_leave_blocking_section();
 
   ret = caml_alloc_string(written);
-  memcpy(String_val(ret),outdata,written);
+  memcpy(Bytes_val(ret),outdata,written);
    
   CAMLreturn(ret);
 }
@@ -160,7 +164,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
   CAMLparam2(e,data);
   CAMLlocal1(ret);
   int16_t pcm[2*SHINE_MAX_SAMPLES];
-  int16_t *src = (int16_t *)String_val(data);
+  int16_t *src = (int16_t *)Bytes_val(data);
   int written;
   int chans = Int_val(channels);
   
@@ -181,7 +185,7 @@ CAMLprim value ocaml_shine_encode_s16le(value e, value data, value channels)
   caml_leave_blocking_section();
 
   ret = caml_alloc_string(written);
-  memcpy(String_val(ret),outdata,written);
+  memcpy(Bytes_val(ret),outdata,written);
 
   CAMLreturn(ret);
 }
@@ -198,7 +202,7 @@ CAMLprim value ocaml_shine_flush(value e)
   outdata = shine_flush(enc,&written);
 
   ret = caml_alloc_string(written);
-  memcpy(String_val(ret),outdata,written);
+  memcpy(Bytes_val(ret),outdata,written);
 
   CAMLreturn(ret);
 }

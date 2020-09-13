@@ -18,31 +18,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *)
 
- (** OCaml bindings for the libshine. *)
+(** OCaml bindings for the libshine. *)
 
 type t
-
-type parameters = 
-  { 
-    samplerate : int;
-    channels   : int;
-    bitrate    : int;
-  }
+type parameters = { samplerate : int; channels : int; bitrate : int }
 
 exception Invalid_buffer_size
 
 (** Raised when samplerate and/or bitrate
-  * is invalid. *) 
+  * is invalid. *)
 exception Invalid_configuration
 
 exception Invalid_channels
 
 val create : parameters -> t
-
 val samples_per_pass : t -> int
-
 val encode_buffer : t -> float array array -> string
-
 val encode_s16le : t -> string -> int -> string
-
 val flush : t -> string

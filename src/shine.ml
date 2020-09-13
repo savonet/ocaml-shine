@@ -18,57 +18,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *)
 
- (** OCaml bindings for the libshine. *)
+(** OCaml bindings for the libshine. *)
 
 type enc
-
-type t = 
-  {
-    enc              : enc;
-    samples_per_pass : int;
-  }
-
-type parameters = 
-  { 
-    samplerate : int;
-    channels   : int;
-    bitrate    : int;
-  }
+type t = { enc : enc; samples_per_pass : int }
+type parameters = { samplerate : int; channels : int; bitrate : int }
 
 exception Invalid_buffer_size
 exception Invalid_configuration
 exception Invalid_channels
 
 external check_config : int -> int -> bool = "ocaml_shine_check_config"
-
 external samples_per_pass : enc -> int = "ocaml_shine_samples_per_pass"
-
 external create : int -> int -> int -> enc = "ocaml_shine_init"
 
-let create params = 
-  if not (check_config params.samplerate params.bitrate)  then
+let create params =
+  if not (check_config params.samplerate params.bitrate) then
     raise Invalid_configuration;
-  if params.channels < 1 || params.channels > 2 then
-    raise Invalid_channels;
-  let enc =
-    create params.channels params.samplerate params.bitrate
-  in
-  { enc = enc; samples_per_pass = (samples_per_pass enc) } 
+  if params.channels < 1 || params.channels > 2 then raise Invalid_channels;
+  let enc = create params.channels params.samplerate params.bitrate in
+  { enc; samples_per_pass = samples_per_pass enc }
 
 let samples_per_pass enc = enc.samples_per_pass
 
-external encode_buffer : enc -> float array array -> string = "ocaml_shine_encode_float"
+external encode_buffer : enc -> float array array -> string
+  = "ocaml_shine_encode_float"
 
-let encode_buffer enc buf = 
-  if (Array.length buf == 0) || (Array.length buf.(0) != enc.samples_per_pass) then
+let encode_buffer enc buf =
+  if Array.length buf == 0 || Array.length buf.(0) != enc.samples_per_pass then
     raise Invalid_buffer_size;
 
   encode_buffer enc.enc buf
 
-external encode_s16le : enc -> string -> int -> string = "ocaml_shine_encode_s16le"
+external encode_s16le : enc -> string -> int -> string
+  = "ocaml_shine_encode_s16le"
 
 let encode_s16le enc data chans =
-  if String.length data < 2*enc.samples_per_pass*chans then
+  if String.length data < 2 * enc.samples_per_pass * chans then
     raise Invalid_buffer_size;
 
   encode_s16le enc.enc data chans
