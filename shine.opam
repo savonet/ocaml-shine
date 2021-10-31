@@ -11,11 +11,13 @@ homepage: "https://github.com/savonet/ocaml-shine"
 bug-reports: "https://github.com/savonet/ocaml-shine/issues"
 depends: [
   "ocaml" {>= "4.03.0"}
-  "dune" {> "2.0"}
+  "dune" {>= "2.7"}
+  "conf-shine"
   "dune-configurator"
+  "odoc" {with-doc}
 ]
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   [
     "dune"
     "build"
@@ -29,12 +31,3 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/savonet/ocaml-shine.git"
-depexts: [
-  ["shine"] {os-distribution = "alpine"}
-  ["libshine-devel"] {os-distribution = "centos"}
-  ["libshine-devel"] {os-distribution = "fedora"}
-  ["libshine-devel"] {os-distribution = "opensuse"}
-  ["libshine-dev"] {os-family = "debian"}
-  ["drfill/liquidsoap/libshine"]
-    {os = "macos" & os-distribution = "homebrew"}
-]

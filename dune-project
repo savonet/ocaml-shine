@@ -1,4 +1,4 @@
-(lang dune 2.0)
+(lang dune 2.7)
 (version 0.2.2)
 (name shine)
 (source (github savonet/ocaml-shine))
@@ -14,6 +14,7 @@
  (description "shine is a super fast mp3 encoding library implemented in fixed-point arithmetic.")
  (depends
   (ocaml (>= 4.03.0))
-  (dune (> 2.0))
+  dune
+  conf-shine
   dune-configurator)
 )
