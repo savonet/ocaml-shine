@@ -9,7 +9,7 @@ Prerequisites:
 
 - ocaml
 
-- lame
+- libshine
 
 - findlib
 
