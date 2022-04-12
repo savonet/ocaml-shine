@@ -11,7 +11,7 @@ let () =
           | Some pc -> (
               match C.Pkg_config.query pc ~package:"shine" with
                 | None -> default
-                | Some deps -> deps )
+                | Some deps -> deps)
       in
 
       C.Flags.write_sexp "c_flags.sexp" conf.cflags;

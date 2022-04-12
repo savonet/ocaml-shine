@@ -3,10 +3,16 @@ let dst = ref ""
 let buflen = ref 1024
 
 let input_string chan len =
-  let ans = Bytes.create len in
-  (* TODO: check length *)
-  ignore (input chan ans 0 len);
-  Bytes.to_string ans
+  let ans = Buffer.create len in
+  let buf = Bytes.create len in
+  let rec f rem =
+    if 0 < rem then (
+      let ret = input chan buf 0 rem in
+      Buffer.add_subbytes ans buf 0 ret;
+      f (rem - ret))
+  in
+  f len;
+  Buffer.contents ans
 
 let input_int chan =
   let buf = input_string chan 4 in
@@ -37,7 +43,7 @@ let _ =
     usage;
   if !src = "" || !dst = "" then (
     Printf.printf "%s\n" usage;
-    exit 1 );
+    exit 1);
   let ic = open_in_bin !src in
   (* TODO: improve! *)
   if input_string ic 4 <> "RIFF" then invalid_arg "No RIFF tag";
@@ -64,7 +70,14 @@ let _ =
   Printf.printf
     "Encoding to: MP3 %d channels, %d Hz, bitrate: %d\nPlease wait...\n%!"
     channels infreq !bitrate;
-  if input_string ic 4 <> "data" then invalid_arg "No data tag";
+  let rec f () =
+    let tag = input_string ic 4 in
+    let len = input_int ic in
+    if tag <> "data" then (
+      ignore (input_string ic len);
+      f ())
+  in
+  f ();
   (* This ensures the actual audio data will start on a new page, as per
    * spec. *)
   let buflen = 2 * channels * Shine.samples_per_pass enc in
