@@ -34,7 +34,7 @@
 
 #include <string.h>
 
-#define IS_BIGENDIAN (!*(unsigned char *)&(uint16_t){1})
+#include "config.h"
 
 #ifndef Bytes_val
 #define Bytes_val String_val

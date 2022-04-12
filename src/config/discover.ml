@@ -1,7 +1,12 @@
 module C = Configurator.V1
 
+external is_big_endian : unit -> bool = "ocaml_lame_is_big_endian"
+
 let () =
   C.main ~name:"shine-pkg-config" (fun c ->
+      C.C_define.gen_header_file c ~fname:"config.h"
+        [("IS_BIGENDIAN", Switch (is_big_endian ()))];
+
       let default : C.Pkg_config.package_conf =
         { libs = ["-lshine"]; cflags = [] }
       in
