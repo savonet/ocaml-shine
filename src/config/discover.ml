@@ -1,6 +1,6 @@
 module C = Configurator.V1
 
-external is_big_endian : unit -> bool = "ocaml_lame_is_big_endian"
+external is_big_endian : unit -> bool = "ocaml_shine_is_big_endian"
 
 let () =
   C.main ~name:"shine-pkg-config" (fun c ->
