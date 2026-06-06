@@ -82,13 +82,12 @@ let _ =
    * spec. *)
   let buflen = 2 * channels * Shine.samples_per_pass enc in
   let buf = Bytes.create buflen in
-  begin
-    try
-      while true do
-        really_input ic buf 0 (Bytes.length buf);
-        output_string oc (Shine.encode_s16le enc (Bytes.to_string buf) channels)
-      done
-    with End_of_file -> ()
+  begin try
+    while true do
+      really_input ic buf 0 (Bytes.length buf);
+      output_string oc (Shine.encode_s16le enc (Bytes.to_string buf) channels)
+    done
+  with End_of_file -> ()
   end;
   output_string oc (Shine.flush enc);
   close_in ic;

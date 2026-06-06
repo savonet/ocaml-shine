@@ -25,8 +25,7 @@ type parameters = { samplerate : int; channels : int; bitrate : int }
 
 exception Invalid_buffer_size
 
-(** Raised when samplerate and/or bitrate
-  * is invalid. *)
+(** Raised when samplerate and/or bitrate * is invalid. *)
 exception Invalid_configuration
 
 exception Invalid_channels

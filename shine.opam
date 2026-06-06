@@ -10,14 +10,13 @@ license: "GPL-2.0"
 homepage: "https://github.com/savonet/ocaml-shine"
 bug-reports: "https://github.com/savonet/ocaml-shine/issues"
 depends: [
-  "ocaml" {>= "4.03.0"}
-  "dune" {>= "2.8"}
   "conf-shine"
+  "conf-pkg-config"
+  "dune" {>= "3.23"}
   "dune-configurator"
   "odoc" {with-doc}
 ]
 build: [
-  ["dune" "subst"] {dev}
   [
     "dune"
     "build"
@@ -31,3 +30,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/savonet/ocaml-shine.git"
+x-maintenance-intent: ["(latest)"]

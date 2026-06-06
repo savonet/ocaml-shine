@@ -1,32 +1,21 @@
-ocaml-shine
-===========
+# ocaml-shine
 
-This package contains an OCaml interface for the shine fixed-point encoding
-library. Please read the COPYING file before using this software.
+> [!WARNING]
+> This repository is read-only. All changes must be made in
+> [savonet/liquidsoap](https://github.com/savonet/liquidsoap) under
+> `src/modules/synced/shine/` and will be mirrored here automatically.
 
-Prerequisites:
-==============
+OCaml bindings for [libshine](https://github.com/toots/shine), a super-fast fixed-point MP3 encoder.
 
-- ocaml
+Please read the COPYING file before using this software.
 
-- libshine
+## Prerequisites
 
-- findlib
+- OCaml >= 4.03
+- libshine (e.g. `apt install libshine-dev` or `brew install shine`)
+- dune >= 3.0
 
-- dune
-
-Compilation:
-============
-
-```
-$ dune build
-```
-
-This should build both the native and the byte-code version of the
-extension library.
-
-Installation:
-=============
+## Installation
 
 Via `opam`:
 
@@ -34,13 +23,13 @@ Via `opam`:
 $ opam install shine
 ```
 
-Via `dune` (for developers):
+## Building from source
+
 ```
+$ dune build
 $ dune install
 ```
 
-Author
-------
+## Contact
 
-This author of this software may be contacted by electronic mail at the
-following address: <savonet-users@lists.sourceforge.net>.
+savonet-users@lists.sourceforge.net
